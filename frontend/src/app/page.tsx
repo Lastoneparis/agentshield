@@ -19,7 +19,7 @@ import RiskScoreBadge from '@/components/RiskScoreBadge';
 import { fetchStats, fetchAlerts, fetchTransactions, fetchPolicies } from '@/lib/api';
 import { DashboardStats, Alert, Transaction, Policy } from '@/lib/types';
 
-// Demo data
+// Demo data — using fixed timestamps to avoid SSR/client hydration mismatch
 const demoStats: DashboardStats = {
   totalTransactions: 247,
   blockedTransactions: 23,
@@ -30,11 +30,11 @@ const demoStats: DashboardStats = {
 const demoAlerts: Alert[] = [
   {
     id: 'da1',
-    timestamp: new Date(Date.now() - 120000).toISOString(),
+    timestamp: '2026-03-20T12:00:00Z',
     severity: 'critical',
     transaction: {
       id: 'dtx-a1',
-      timestamp: new Date(Date.now() - 120000).toISOString(),
+      timestamp: '2026-03-20T12:00:00Z',
       agent: 'Trading-Bot-1',
       from: '0x742d35Cc6634C0532925a3b844Bc9e7595f2bD88',
       to: '0xC3A1e...F291d',
@@ -50,11 +50,11 @@ const demoAlerts: Alert[] = [
   },
   {
     id: 'da2',
-    timestamp: new Date(Date.now() - 300000).toISOString(),
+    timestamp: '2026-03-20T11:55:00Z',
     severity: 'critical',
     transaction: {
       id: 'dtx-a2',
-      timestamp: new Date(Date.now() - 300000).toISOString(),
+      timestamp: '2026-03-20T11:55:00Z',
       agent: 'DeFi-Agent',
       from: '0x742d35Cc6634C0532925a3b844Bc9e7595f2bD88',
       to: '0xdead000000000000000000000000000000000000',
@@ -72,22 +72,22 @@ const demoAlerts: Alert[] = [
 
 const demoTransactions: Transaction[] = [
   {
-    id: 'dt1', timestamp: new Date(Date.now() - 10000).toISOString(),
+    id: 'dt1', timestamp: '2026-03-20T12:05:00Z',
     agent: 'Trading-Bot-1', from: '0x742d...bD88', to: '0xA0b8...eB48',
     value: '0.01', token: 'ETH', riskScore: 8, status: 'approved', policy: 'All checks passed',
   },
   {
-    id: 'dt2', timestamp: new Date(Date.now() - 25000).toISOString(),
+    id: 'dt2', timestamp: '2026-03-20T12:04:00Z',
     agent: 'Trading-Bot-1', from: '0x742d...bD88', to: '0xdead...0000',
     value: '5.0', token: 'ETH', riskScore: 95, status: 'blocked', policy: 'Known Scam Address',
   },
   {
-    id: 'dt3', timestamp: new Date(Date.now() - 45000).toISOString(),
+    id: 'dt3', timestamp: '2026-03-20T12:03:00Z',
     agent: 'Trading-Bot-1', from: '0x742d...bD88', to: '0x1f98...F984',
     value: '0.05', token: 'ETH', riskScore: 22, status: 'approved', policy: 'All checks passed',
   },
   {
-    id: 'dt4', timestamp: new Date(Date.now() - 90000).toISOString(),
+    id: 'dt4', timestamp: '2026-03-20T12:02:00Z',
     agent: 'Trading-Bot-1', from: '0x742d...bD88', to: '0x7a25...488D',
     value: '0.00', token: 'ETH', riskScore: 88, status: 'blocked', policy: 'Infinite Approval Blocked',
   },
