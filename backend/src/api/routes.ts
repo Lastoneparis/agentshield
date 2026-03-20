@@ -403,6 +403,7 @@ router.post('/auth/verify-worldid', (req: Request, res: Response) => {
     // Log the verification attempt
     insertAuditLog({
       id: uuidv4(),
+      agent_id: 'worldid',
       action: 'worldid_verification',
       details: JSON.stringify({
         proof: proof || 'none',

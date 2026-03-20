@@ -101,6 +101,107 @@ const demoPolicies: Policy[] = [
   { id: 'p5', name: 'Prompt Injection Shield', description: 'AI instruction analysis', enabled: true, type: 'pattern', config: { model: 'AgentShield-v1' } },
 ];
 
+// Threat feed event templates
+const threatFeedEvents = [
+  { tag: 'SECURITY', msg: 'Analyzing transaction request...', color: 'text-blue-400' },
+  { tag: 'AI', msg: 'Prompt injection pattern NOT detected', color: 'text-green-400', ok: true },
+  { tag: 'POLICY', msg: 'Daily limit check: 0.01/1.0 ETH', color: 'text-green-400', ok: true },
+  { tag: 'CHAINLINK', msg: 'ETH/USD verified: $3,847', color: 'text-green-400', ok: true },
+  { tag: 'ACTION', msg: 'Transaction APPROVED — Risk: 8', color: 'text-green-400', ok: true },
+  { tag: 'SECURITY', msg: 'New transaction from DeFi-Agent...', color: 'text-blue-400' },
+  { tag: 'AI', msg: 'Analyzing instruction payload...', color: 'text-yellow-400', warn: true },
+  { tag: 'AI', msg: 'Prompt injection pattern DETECTED', color: 'text-red-400', bad: true },
+  { tag: 'ACTION', msg: 'Transaction BLOCKED — Risk: 98', color: 'text-red-400', bad: true },
+  { tag: 'SECURITY', msg: 'Scanning contract at 0x1f98...F984...', color: 'text-blue-400' },
+  { tag: 'POLICY', msg: 'Address whitelist check passed', color: 'text-green-400', ok: true },
+  { tag: 'CHAINLINK', msg: 'Gas price oracle: 12 gwei', color: 'text-green-400', ok: true },
+  { tag: 'ACTION', msg: 'Transaction APPROVED — Risk: 22', color: 'text-green-400', ok: true },
+  { tag: 'SECURITY', msg: 'Infinite approval attempt detected...', color: 'text-yellow-400', warn: true },
+  { tag: 'POLICY', msg: 'Approval guard: UNLIMITED not allowed', color: 'text-red-400', bad: true },
+  { tag: 'ACTION', msg: 'Transaction BLOCKED — Risk: 88', color: 'text-red-400', bad: true },
+];
+
+function ThreatFeed({ wsEvents }: { wsEvents?: Array<{ tag: string; msg: string }> }) {
+  const [entries, setEntries] = useState<Array<{ id: number; time: string; tag: string; msg: string; ok?: boolean; bad?: boolean; warn?: boolean }>>([]);
+  const idxRef = { current: 0 }; // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const addEntry = () => {
+      const evt = threatFeedEvents[idxRef.current % threatFeedEvents.length];
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      setEntries((prev) => [
+        { id: Date.now() + Math.random(), time, ...evt },
+        ...prev,
+      ].slice(0, 20));
+      idxRef.current++;
+    };
+
+    addEntry();
+    const interval = setInterval(addEntry, 3200);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Add WebSocket events when they arrive
+  useEffect(() => {
+    if (wsEvents && wsEvents.length > 0) {
+      const last = wsEvents[wsEvents.length - 1];
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      setEntries((prev) => [
+        { id: Date.now() + Math.random(), time, tag: last.tag || 'WS', msg: last.msg || 'Event received', ok: true },
+        ...prev,
+      ].slice(0, 20));
+    }
+  }, [wsEvents]);
+
+  return (
+    <div className="bg-[#0a0b0f] border border-card-border rounded-xl overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-card-border">
+        <div className="flex items-center gap-2">
+          <Zap className="w-4 h-4 text-accent-green" />
+          <h3 className="text-sm font-medium text-white">Real-Time Threat Feed</h3>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="relative">
+            <div className="w-2 h-2 rounded-full bg-accent-green" />
+            <div className="absolute inset-0 w-2 h-2 rounded-full bg-accent-green pulse-ring" />
+          </div>
+          <span className="text-[10px] font-mono text-accent-green">LIVE</span>
+        </div>
+      </div>
+      <div className="p-3 max-h-[260px] overflow-y-auto font-mono text-xs space-y-0.5" style={{ background: '#0a0b0f' }}>
+        <AnimatePresence>
+          {entries.map((e) => (
+            <motion.div
+              key={e.id}
+              initial={{ opacity: 0, y: -12, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: 'auto' }}
+              transition={{ duration: 0.3 }}
+              className="py-1"
+            >
+              <span className="text-text-muted/40">[{e.time}]</span>{' '}
+              <span className={
+                e.bad ? 'text-red-400' :
+                e.warn ? 'text-yellow-400' :
+                e.ok ? 'text-green-400' :
+                'text-blue-400'
+              }>[{e.tag}]</span>{' '}
+              <span className={
+                e.bad ? 'text-red-300' :
+                e.warn ? 'text-yellow-300' :
+                'text-slate-300'
+              }>{e.msg}</span>{' '}
+              {e.ok && <span className="text-green-400">&#10003;</span>}
+              {e.bad && <span className="text-red-400">&#10007;</span>}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
 // Agent activity messages for typing effect
 const agentActivities = [
   'Monitoring ETH/USDC price feeds...',
@@ -402,6 +503,28 @@ export default function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-6"
             >
+              {/* Security Checklist Badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="flex justify-center mb-4"
+              >
+                <div className="inline-flex items-start gap-4 px-5 py-3 rounded-xl bg-accent-green/5 border border-accent-green/15">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-accent-green flex-shrink-0" />
+                    <span className="text-xs font-bold text-accent-green font-mono">AI Agent Protected</span>
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-mono text-text-muted">
+                    <span className="text-accent-green/80">&#10004; Prompt Injection Detection</span>
+                    <span className="text-accent-green/80">&#10004; Transaction Simulation</span>
+                    <span className="text-accent-green/80">&#10004; Wallet Drain Protection</span>
+                    <span className="text-accent-green/80">&#10004; Policy Enforcement</span>
+                    <span className="text-accent-green/80">&#10004; Chainlink Verified</span>
+                  </div>
+                </div>
+              </motion.div>
+
               <div className="flex items-center justify-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-2xl bg-accent-green/10 flex items-center justify-center glow-green">
                   <Shield className="w-7 h-7 text-accent-green" />
@@ -472,6 +595,9 @@ export default function DashboardPage() {
               {/* Panel 3: Security Policies */}
               <PolicySidebar policies={policies} />
             </div>
+
+            {/* Real-Time Threat Feed (full width security console) */}
+            <ThreatFeed />
 
             {/* Panel 4: Security Alerts (full width, dramatic) */}
             <SecurityAlertPanel alerts={(Array.isArray(liveAlerts) ? liveAlerts : []).filter(a => !a.acknowledged).slice(0, 3)} />

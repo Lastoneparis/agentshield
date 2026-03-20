@@ -12,16 +12,29 @@ const AGGREGATOR_ABI = [
 const MOCK_ETH_PRICE = 3000.0;
 const PRICE_DEVIATION_THRESHOLD = 0.05; // 5%
 
+// Cache to avoid hammering RPC
+let cachedPrice: { price: number; source: string; roundId: string; timestamp: number } | null = null;
+const CACHE_TTL_MS = 60_000; // 1 minute
+
 /**
  * Get the current ETH/USD price from Chainlink on Sepolia.
  * Falls back to a mock price if the RPC is unavailable.
  */
 export async function getEthPrice(): Promise<{ price: number; source: string; roundId: string }> {
+  // Return cached price if fresh
+  if (cachedPrice && Date.now() - cachedPrice.timestamp < CACHE_TTL_MS) {
+    return { price: cachedPrice.price, source: cachedPrice.source, roundId: cachedPrice.roundId };
+  }
+
   try {
-    const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC);
+    const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC, undefined, { staticNetwork: true });
     const feed = new ethers.Contract(SEPOLIA_ETH_USD_FEED, AGGREGATOR_ABI, provider);
 
-    const [roundId, answer] = await feed.latestRoundData();
+    // Add 5-second timeout to prevent blocking
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Chainlink RPC timeout (5s)')), 5000)
+    );
+    const [roundId, answer] = await Promise.race([feed.latestRoundData(), timeoutPromise]) as any;
 
     // Chainlink ETH/USD feed uses 8 decimals
     const price = Number(answer) / 1e8;
@@ -31,18 +44,22 @@ export async function getEthPrice(): Promise<{ price: number; source: string; ro
     }
 
     console.log(`[Chainlink] ETH/USD price: $${price.toFixed(2)} (round ${roundId.toString()})`);
-    return {
+    const result = {
       price,
       source: 'chainlink_sepolia',
       roundId: roundId.toString(),
     };
+    cachedPrice = { ...result, timestamp: Date.now() };
+    return result;
   } catch (err: any) {
     console.warn(`[Chainlink] Sepolia feed unavailable, using mock price: $${MOCK_ETH_PRICE}. Error: ${err.message}`);
-    return {
+    const fallback = {
       price: MOCK_ETH_PRICE,
       source: 'mock_fallback',
       roundId: '0',
     };
+    cachedPrice = { ...fallback, timestamp: Date.now() };
+    return fallback;
   }
 }
 
