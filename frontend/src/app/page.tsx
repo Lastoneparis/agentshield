@@ -326,14 +326,14 @@ function SecurityAlertPanel({ alerts }: { alerts: Alert[] }) {
                     ALERT — {alert.violatedPolicy}
                   </span>
                 </div>
-                <RiskScoreBadge score={alert.transaction.riskScore} size="md" />
+                <RiskScoreBadge score={alert.transaction?.riskScore ?? 0} size="md" />
               </div>
 
               <div className="space-y-2 mb-3">
                 <div className="flex items-center gap-2 text-xs">
                   <span className="text-text-muted font-mono">Attempted:</span>
                   <span className="text-white font-mono font-medium">
-                    Send {alert.transaction.value} {alert.transaction.token || 'ETH'} to {alert.transaction.to}
+                    Send {alert.transaction?.value ?? '?'} {alert.transaction?.token || 'ETH'} to {alert.transaction?.to ?? '???'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
@@ -475,6 +475,74 @@ export default function DashboardPage() {
 
             {/* Panel 4: Security Alerts (full width, dramatic) */}
             <SecurityAlertPanel alerts={(Array.isArray(liveAlerts) ? liveAlerts : []).filter(a => !a.acknowledged).slice(0, 3)} />
+
+            {/* Powered By: Sponsor Integrations */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8"
+            >
+              <div className="text-center mb-4">
+                <span className="text-xs font-mono text-text-muted uppercase tracking-widest">Powered By</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Chainlink */}
+                <div className="bg-bg-card border border-card-border rounded-xl px-4 py-3 flex items-center gap-3 hover:border-accent-blue/30 transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 text-blue-400" fill="currentColor">
+                      <path d="M12 1L3 6.5v11L12 23l9-5.5v-11L12 1zm0 2.311l6.764 4.135v8.27L12 19.85l-6.764-4.135v-8.27L12 3.311z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">Chainlink</p>
+                    <p className="text-[10px] text-text-muted">Oracle Price Verification</p>
+                  </div>
+                  <div className="ml-auto w-2 h-2 rounded-full bg-accent-green flex-shrink-0" />
+                </div>
+
+                {/* 0G Labs */}
+                <div className="bg-bg-card border border-card-border rounded-xl px-4 py-3 flex items-center gap-3 hover:border-purple-500/30 transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-purple-400 font-bold text-sm">0G</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">0G Labs</p>
+                    <p className="text-[10px] text-text-muted">Decentralized Security Logs</p>
+                  </div>
+                  <div className="ml-auto w-2 h-2 rounded-full bg-accent-green flex-shrink-0" />
+                </div>
+
+                {/* Ledger */}
+                <div className="bg-bg-card border border-card-border rounded-xl px-4 py-3 flex items-center gap-3 hover:border-white/20 transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="currentColor">
+                      <path d="M0 14.59V24h9.41v-1.89H1.89v-7.52H0zm22.11-5.18V24H24V9.41h-1.89zM0 0v9.41h1.89V1.89h7.52V0H0zm14.59 0v1.89h7.52v7.52H24V0h-9.41z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">Ledger</p>
+                    <p className="text-[10px] text-text-muted">Hardware Approval Layer</p>
+                  </div>
+                  <div className="ml-auto w-2 h-2 rounded-full bg-accent-green flex-shrink-0" />
+                </div>
+
+                {/* World */}
+                <div className="bg-bg-card border border-card-border rounded-xl px-4 py-3 flex items-center gap-3 hover:border-emerald-500/30 transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 text-emerald-400" fill="currentColor">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/>
+                      <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">World</p>
+                    <p className="text-[10px] text-text-muted">Human Identity Verification</p>
+                  </div>
+                  <div className="ml-auto w-2 h-2 rounded-full bg-accent-green flex-shrink-0" />
+                </div>
+              </div>
+            </motion.div>
           </div>
         );
       }}

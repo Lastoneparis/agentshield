@@ -55,6 +55,9 @@ app.get('/', (_req, res) => {
       attack_sim_scenarios: 'GET /api/attack-sim/scenarios',
       attack_sim_reports: 'GET /api/attack-sim/reports',
       attack_sim_report: 'GET /api/attack-sim/reports/:id',
+      approve_tx: 'POST /api/transactions/:id/approve',
+      reject_tx: 'POST /api/transactions/:id/reject',
+      verify_worldid: 'POST /api/auth/verify-worldid',
       websocket: 'WS /ws',
     },
   });

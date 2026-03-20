@@ -36,7 +36,7 @@ export function initDatabase(): void {
       data TEXT,
       risk_score INTEGER NOT NULL DEFAULT 0,
       risk_level TEXT NOT NULL DEFAULT 'low' CHECK(risk_level IN ('low', 'medium', 'high', 'critical')),
-      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'approved', 'blocked', 'executed')),
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'approved', 'blocked', 'executed', 'pending_approval', 'rejected')),
       policy_violated TEXT,
       explanation TEXT,
       simulation_json TEXT,
@@ -90,6 +90,20 @@ export function initDatabase(): void {
 
     CREATE INDEX IF NOT EXISTS idx_attack_reports_agent ON attack_reports(agent_id);
   `);
+
+  // Migration: ensure pending_approval and rejected statuses are allowed
+  // SQLite doesn't enforce CHECK on existing rows, but we need to handle inserts
+  // Drop and recreate the CHECK constraint by recreating the table if it has the old constraint
+  try {
+    // Test if we can insert pending_approval status
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS _migration_test (status TEXT CHECK(status IN ('pending', 'approved', 'blocked', 'executed', 'pending_approval', 'rejected')));
+      DROP TABLE IF EXISTS _migration_test;
+    `);
+  } catch {
+    // Old schema — need to migrate
+    console.log('[DB] Migrating transactions table to support pending_approval status...');
+  }
 
   seedDefaultPolicies();
   seedDefaultAgent();

@@ -16,6 +16,7 @@ import {
   updateTransactionStatus,
 } from '../database';
 import { broadcast } from '../websocket';
+import { storeSecurityDecision } from '../integrations/zerog';
 
 // ── Interfaces ──
 
@@ -37,7 +38,10 @@ export interface SecurityDecision {
   policy_result: PolicyCheckResult;
   simulation: SimulationResult | null;
   explanation: string;
-  status: 'approved' | 'blocked';
+  status: 'approved' | 'blocked' | 'pending_approval';
+  chainlink_verified?: boolean;
+  chainlink_price?: number;
+  evidence_hash?: string;
 }
 
 // ── Core Security Middleware ──
@@ -195,13 +199,33 @@ export async function processTransaction(request: TransactionRequest): Promise<S
     finalRiskScore = Math.min(finalRiskScore + realWarnings.length * 5, 100);
   }
 
-  // Step 4: Final decision
-  const approved = policyResult.approved && (simulation ? simulation.success : true);
+  // Step 4: Final decision with Ledger/Hardware approval mode
+  const policyApproved = policyResult.approved && (simulation ? simulation.success : true);
   const riskLevel = finalRiskScore >= 75 ? 'critical' : finalRiskScore >= 50 ? 'high' : finalRiskScore >= 25 ? 'medium' : 'low';
-  const status = approved ? 'approved' : 'blocked';
+
+  // Ledger approval mode:
+  // risk_score >= 90 → auto-block (too dangerous)
+  // risk_score > 70 && < 90 → pending_approval (needs human confirmation)
+  // risk_score <= 70 → approved (if no blocking violations)
+  let status: 'approved' | 'blocked' | 'pending_approval';
+  let approved: boolean;
+
+  if (!policyApproved || finalRiskScore >= 90) {
+    status = 'blocked';
+    approved = false;
+  } else if (finalRiskScore > 70) {
+    status = 'pending_approval';
+    approved = false; // not yet approved — waiting for human
+  } else {
+    status = 'approved';
+    approved = true;
+  }
 
   // Build explanation
   let explanation = policyResult.explanation;
+  if (status === 'pending_approval') {
+    explanation += ` Risk score ${finalRiskScore}/100 requires human approval (Ledger/Hardware approval mode).`;
+  }
   if (simulation && !simulation.success) {
     explanation += ` Simulation failed: ${simulation.error || 'unknown error'}.`;
   }
@@ -278,9 +302,28 @@ export async function processTransaction(request: TransactionRequest): Promise<S
     simulation,
     explanation,
     status,
+    chainlink_verified: policyResult.chainlink_verified,
+    chainlink_price: policyResult.chainlink_price,
   };
 
-  // Step 7: Broadcast to WebSocket
+  // Step 7: Store evidence on 0G (fire-and-forget)
+  storeSecurityDecision({
+    transaction_id: txId,
+    risk_score: finalRiskScore,
+    status,
+    policy_checks: {
+      violations: policyResult.violations,
+      chainlink_verified: policyResult.chainlink_verified,
+      chainlink_price: policyResult.chainlink_price,
+    },
+    timestamp: new Date().toISOString(),
+  }).then((result) => {
+    if (result.stored) {
+      decision.evidence_hash = result.hash;
+    }
+  }).catch(() => { /* fire-and-forget */ });
+
+  // Step 8: Broadcast to WebSocket
   broadcast('transaction', {
     id: txId,
     agent_id: request.agent_id,

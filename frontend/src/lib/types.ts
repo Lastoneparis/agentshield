@@ -7,7 +7,7 @@ export interface Transaction {
   value: string;
   token: string;
   riskScore: number;
-  status: 'approved' | 'blocked' | 'pending';
+  status: 'approved' | 'blocked' | 'pending' | 'pending_approval' | 'rejected';
   policy?: string;
   simulationResult?: string;
   policyChecks?: PolicyCheck[];

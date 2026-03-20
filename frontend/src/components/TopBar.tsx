@@ -1,6 +1,7 @@
 'use client';
 
 import { Wifi, WifiOff } from 'lucide-react';
+import WalletConnect from './WalletConnect';
 
 interface TopBarProps {
   connected: boolean;
@@ -16,6 +17,9 @@ export default function TopBar({ connected }: TopBarProps) {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Wallet Connection */}
+        <WalletConnect />
+
         {/* Connection Status */}
         <div
           className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono ${
@@ -40,12 +44,6 @@ export default function TopBar({ connected }: TopBarProps) {
               <span>OFFLINE</span>
             </>
           )}
-        </div>
-
-        {/* Network Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-hover text-xs font-mono text-text-secondary border border-card-border">
-          <div className="w-2 h-2 rounded-full bg-accent-blue" />
-          Ethereum
         </div>
       </div>
     </header>

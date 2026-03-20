@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, CheckCircle, XCircle, Clock, ExternalLink } from 'lucide-react';
+import { ChevronDown, ChevronUp, CheckCircle, XCircle, Clock, AlertTriangle, ExternalLink } from 'lucide-react';
 import RiskScoreBadge from './RiskScoreBadge';
 import { Transaction } from '@/lib/types';
 
@@ -12,7 +12,7 @@ interface TransactionCardProps {
 }
 
 function StatusBadge({ status }: { status: Transaction['status'] }) {
-  const config = {
+  const configMap: Record<string, { bg: string; text: string; border: string; icon: typeof CheckCircle; label: string }> = {
     approved: {
       bg: 'bg-accent-green/10',
       text: 'text-accent-green',
@@ -34,7 +34,22 @@ function StatusBadge({ status }: { status: Transaction['status'] }) {
       icon: Clock,
       label: 'PENDING',
     },
-  }[status];
+    pending_approval: {
+      bg: 'bg-amber-500/10',
+      text: 'text-amber-400',
+      border: 'border-amber-500/20',
+      icon: AlertTriangle,
+      label: 'AWAITING APPROVAL',
+    },
+    rejected: {
+      bg: 'bg-accent-red/10',
+      text: 'text-accent-red',
+      border: 'border-accent-red/20',
+      icon: XCircle,
+      label: 'REJECTED',
+    },
+  };
+  const config = configMap[status] || configMap.pending;
 
   const Icon = config.icon;
 

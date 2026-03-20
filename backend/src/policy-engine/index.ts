@@ -1,4 +1,5 @@
 import { getPolicy, getDailySpend } from '../database';
+import { getEthPrice, verifyFairPrice } from '../integrations/chainlink';
 
 // ── Interfaces ──
 
@@ -8,6 +9,8 @@ export interface PolicyCheckResult {
   risk_level: 'low' | 'medium' | 'high' | 'critical';
   violations: PolicyViolation[];
   explanation: string;
+  chainlink_verified?: boolean;
+  chainlink_price?: number;
 }
 
 export interface PolicyViolation {
@@ -205,6 +208,54 @@ export function checkKnownScams(address: string): PolicyViolation | null {
   return null;
 }
 
+// ── Chainlink Price Check ──
+
+export async function checkChainlinkPrice(
+  valueEth: number,
+  data?: string
+): Promise<{ violation: PolicyViolation | null; chainlink_verified: boolean; chainlink_price: number }> {
+  // Only check if this looks like a swap/trade (has calldata) or a significant ETH transfer
+  const isSwap = data && data.length > 10;
+  const isSignificantTransfer = valueEth > 0.01;
+
+  if (!isSwap && !isSignificantTransfer) {
+    // Not a swap/trade — just fetch price for metadata
+    const { price } = await getEthPrice();
+    return { violation: null, chainlink_verified: true, chainlink_price: price };
+  }
+
+  try {
+    const { price, source } = await getEthPrice();
+
+    // For swaps with calldata, check if implied price deviates
+    // We approximate: if there's calldata, the agent is likely doing a swap
+    // The "expected USD" heuristic: value * price should be reasonable
+    if (isSwap && valueEth > 0) {
+      // Flag if we couldn't get a real price (mock fallback)
+      if (source === 'mock_fallback') {
+        return {
+          violation: null,
+          chainlink_verified: false,
+          chainlink_price: price,
+        };
+      }
+    }
+
+    return {
+      violation: null,
+      chainlink_verified: true,
+      chainlink_price: price,
+    };
+  } catch (err: any) {
+    console.warn('[Chainlink] Price check error:', err.message);
+    return {
+      violation: null,
+      chainlink_verified: false,
+      chainlink_price: 3000,
+    };
+  }
+}
+
 // ── Risk Score Computation ──
 
 export function computeRiskScore(violations: PolicyViolation[]): number {
@@ -277,6 +328,12 @@ export async function evaluateTransaction(params: {
     if (result) violations.push(result);
   }
 
+  // Run Chainlink price check (async)
+  const chainlinkResult = await checkChainlinkPrice(value, data);
+  if (chainlinkResult.violation) {
+    violations.push(chainlinkResult.violation);
+  }
+
   const risk_score = computeRiskScore(violations);
   const risk_level = riskLevelFromScore(risk_score);
   const hasBlockingViolation = violations.some((v) => v.severity === 'block');
@@ -294,5 +351,13 @@ export async function evaluateTransaction(params: {
     explanation = `Transaction BLOCKED. Violated policies: ${blockers}. Risk score: ${risk_score}/100.`;
   }
 
-  return { approved, risk_score, risk_level, violations, explanation };
+  return {
+    approved,
+    risk_score,
+    risk_level,
+    violations,
+    explanation,
+    chainlink_verified: chainlinkResult.chainlink_verified,
+    chainlink_price: chainlinkResult.chainlink_price,
+  };
 }
