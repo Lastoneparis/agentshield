@@ -389,8 +389,10 @@ export default function DashboardPage() {
     <DashboardShell>
       {(wsData) => {
         const liveStats = wsData.stats || stats;
-        const liveAlerts = wsData.alerts.length > 0 ? wsData.alerts : alerts;
-        const liveTx = wsData.transactions.length > 0 ? wsData.transactions : transactions;
+        const wsAlerts = Array.isArray(wsData.alerts) ? wsData.alerts : [];
+        const wsTx = Array.isArray(wsData.transactions) ? wsData.transactions : [];
+        const liveAlerts = wsAlerts.length > 0 ? wsAlerts : alerts;
+        const liveTx = wsTx.length > 0 ? wsTx : transactions;
 
         return (
           <div className="space-y-6 grid-bg min-h-screen -m-6 p-6">
@@ -472,7 +474,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Panel 4: Security Alerts (full width, dramatic) */}
-            <SecurityAlertPanel alerts={liveAlerts.filter(a => !a.acknowledged).slice(0, 3)} />
+            <SecurityAlertPanel alerts={(Array.isArray(liveAlerts) ? liveAlerts : []).filter(a => !a.acknowledged).slice(0, 3)} />
           </div>
         );
       }}
