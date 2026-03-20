@@ -9,26 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: {
-          DEFAULT: "#0a0b0f",
-          card: "#12141d",
-          hover: "#1a1c2a",
-        },
-        border: {
-          DEFAULT: "#1e2130",
-        },
-        accent: {
-          green: "#00ff88",
-          red: "#ff3366",
-          blue: "#3b82f6",
-          amber: "#f59e0b",
-          orange: "#f97316",
-        },
-        text: {
-          primary: "#ffffff",
-          secondary: "#94a3b8",
-          muted: "#64748b",
-        },
+        "bg": "#0a0b0f",
+        "bg-card": "#12141d",
+        "bg-hover": "#1a1c2a",
+        "card-border": "#1e2130",
+        "accent-green": "#00ff88",
+        "accent-red": "#ff3366",
+        "accent-blue": "#3b82f6",
+        "accent-amber": "#f59e0b",
+        "accent-orange": "#f97316",
+        "text-primary": "#ffffff",
+        "text-secondary": "#94a3b8",
+        "text-muted": "#64748b",
       },
       fontFamily: {
         mono: ["JetBrains Mono", "Fira Code", "monospace"],

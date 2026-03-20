@@ -8,7 +8,7 @@ interface TopBarProps {
 
 export default function TopBar({ connected }: TopBarProps) {
   return (
-    <header className="fixed top-0 left-[220px] right-0 z-30 h-14 bg-bg-card/80 backdrop-blur-xl border-b border-border flex items-center justify-between px-6">
+    <header className="fixed top-0 left-[220px] right-0 z-30 h-14 bg-bg-card/80 backdrop-blur-xl border-b border-card-border flex items-center justify-between px-6">
       <div className="flex items-center gap-3">
         <h2 className="text-sm font-medium text-text-secondary">
           AI Agent Security Monitor
@@ -43,7 +43,7 @@ export default function TopBar({ connected }: TopBarProps) {
         </div>
 
         {/* Network Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-hover text-xs font-mono text-text-secondary border border-border">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-hover text-xs font-mono text-text-secondary border border-card-border">
           <div className="w-2 h-2 rounded-full bg-accent-blue" />
           Ethereum
         </div>

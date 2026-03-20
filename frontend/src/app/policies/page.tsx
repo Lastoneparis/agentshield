@@ -177,7 +177,7 @@ export default function PoliciesPage() {
           </div>
 
           {/* Policy Overview */}
-          <div className="bg-bg-card border border-border rounded-xl p-4">
+          <div className="bg-bg-card border border-card-border rounded-xl p-4">
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-accent-green" />
@@ -221,7 +221,7 @@ export default function PoliciesPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-bg-card border border-border rounded-2xl p-6 w-full max-w-md"
+                className="bg-bg-card border border-card-border rounded-2xl p-6 w-full max-w-md"
               >
                 <h2 className="text-lg font-bold text-white mb-4">Add New Policy</h2>
                 <div className="space-y-4">
@@ -230,12 +230,12 @@ export default function PoliciesPage() {
                     <input
                       type="text"
                       placeholder="e.g., Max Gas Price"
-                      className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm font-mono text-white outline-none focus:border-accent-blue"
+                      className="w-full bg-bg border border-card-border rounded-lg px-3 py-2 text-sm font-mono text-white outline-none focus:border-accent-blue"
                     />
                   </div>
                   <div>
                     <label className="text-xs text-text-muted font-mono block mb-1">Type</label>
-                    <select className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm font-mono text-white outline-none focus:border-accent-blue">
+                    <select className="w-full bg-bg border border-card-border rounded-lg px-3 py-2 text-sm font-mono text-white outline-none focus:border-accent-blue">
                       <option value="limit">Limit</option>
                       <option value="whitelist">Whitelist</option>
                       <option value="pattern">Pattern</option>
@@ -246,14 +246,14 @@ export default function PoliciesPage() {
                     <label className="text-xs text-text-muted font-mono block mb-1">Description</label>
                     <textarea
                       placeholder="What does this policy do?"
-                      className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm font-mono text-white outline-none focus:border-accent-blue h-20 resize-none"
+                      className="w-full bg-bg border border-card-border rounded-lg px-3 py-2 text-sm font-mono text-white outline-none focus:border-accent-blue h-20 resize-none"
                     />
                   </div>
                 </div>
                 <div className="flex gap-3 mt-6">
                   <button
                     onClick={() => setShowAddModal(false)}
-                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-bg-hover text-text-secondary border border-border hover:text-white transition-all"
+                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-bg-hover text-text-secondary border border-card-border hover:text-white transition-all"
                   >
                     Cancel
                   </button>

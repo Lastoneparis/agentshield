@@ -22,9 +22,9 @@ export default function LiveFeed({ transactions, maxItems = 10 }: LiveFeedProps)
   }, [transactions.length]);
 
   return (
-    <div className="bg-bg-card border border-border rounded-xl overflow-hidden">
+    <div className="bg-bg-card border border-card-border rounded-xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-card-border">
         <div className="flex items-center gap-2">
           <Activity className="w-4 h-4 text-accent-green" />
           <h3 className="text-sm font-medium text-white">Live Transaction Feed</h3>

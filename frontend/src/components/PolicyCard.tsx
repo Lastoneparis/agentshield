@@ -43,7 +43,7 @@ export default function PolicyCard({ policy, onToggle, onUpdate }: PolicyCardPro
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={`bg-bg-card border rounded-xl p-4 transition-all duration-200 ${
-        policy.enabled ? 'border-accent-green/20 glow-green' : 'border-border opacity-60'
+        policy.enabled ? 'border-accent-green/20 glow-green' : 'border-card-border opacity-60'
       }`}
     >
       {/* Header */}
@@ -77,14 +77,14 @@ export default function PolicyCard({ policy, onToggle, onUpdate }: PolicyCardPro
 
       {/* Type Badge */}
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-bg-hover text-text-muted border border-border uppercase">
+        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-bg-hover text-text-muted border border-card-border uppercase">
           {policy.type}
         </span>
         <span
           className={`text-[10px] font-mono px-2 py-0.5 rounded ${
             policy.enabled
               ? 'bg-accent-green/10 text-accent-green border border-accent-green/20'
-              : 'bg-bg-hover text-text-muted border border-border'
+              : 'bg-bg-hover text-text-muted border border-card-border'
           }`}
         >
           {policy.enabled ? 'ACTIVE' : 'INACTIVE'}
@@ -103,7 +103,7 @@ export default function PolicyCard({ policy, onToggle, onUpdate }: PolicyCardPro
                 onChange={(e) =>
                   setLocalConfig((prev) => ({ ...prev, [key]: e.target.value }))
                 }
-                className="bg-bg border border-border rounded px-2 py-1 text-xs font-mono text-white w-32 text-right outline-none focus:border-accent-blue"
+                className="bg-bg border border-card-border rounded px-2 py-1 text-xs font-mono text-white w-32 text-right outline-none focus:border-accent-blue"
               />
             ) : (
               <span className="font-mono text-text-secondary">
@@ -131,7 +131,7 @@ export default function PolicyCard({ policy, onToggle, onUpdate }: PolicyCardPro
                 setLocalConfig(policy.config);
                 setEditing(false);
               }}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-bg-hover text-text-muted border border-border hover:text-white transition-all"
+              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-bg-hover text-text-muted border border-card-border hover:text-white transition-all"
             >
               Cancel
             </button>
@@ -139,7 +139,7 @@ export default function PolicyCard({ policy, onToggle, onUpdate }: PolicyCardPro
         ) : (
           <button
             onClick={() => setEditing(true)}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium bg-bg-hover text-text-secondary border border-border hover:text-white hover:border-accent-blue/30 transition-all"
+            className="px-3 py-1.5 rounded-lg text-xs font-medium bg-bg-hover text-text-secondary border border-card-border hover:text-white hover:border-accent-blue/30 transition-all"
           >
             Edit Config
           </button>

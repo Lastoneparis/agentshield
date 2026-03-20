@@ -171,7 +171,7 @@ export default function AlertsPage() {
               {unacknowledgedCount > 0 && (
                 <button
                   onClick={handleAcknowledgeAll}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium bg-bg-card text-text-secondary border border-border hover:text-white hover:border-accent-green/30 transition-all"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium bg-bg-card text-text-secondary border border-card-border hover:text-white hover:border-accent-green/30 transition-all"
                 >
                   <CheckCheck className="w-4 h-4" />
                   Acknowledge All
@@ -206,7 +206,7 @@ export default function AlertsPage() {
             {/* Alerts Feed */}
             <div className="space-y-4">
               {liveAlerts.length === 0 ? (
-                <div className="bg-bg-card border border-border rounded-xl p-12 text-center">
+                <div className="bg-bg-card border border-card-border rounded-xl p-12 text-center">
                   <Bell className="w-8 h-8 text-text-muted mx-auto mb-3 opacity-30" />
                   <p className="text-sm text-text-muted">No alerts to display</p>
                   <p className="text-xs text-text-muted mt-1">Your agents are operating normally</p>

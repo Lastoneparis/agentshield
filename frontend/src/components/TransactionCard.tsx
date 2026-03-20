@@ -142,7 +142,7 @@ export default function TransactionCard({ transaction, compact = false }: Transa
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 pt-1 border-t border-border space-y-3">
+            <div className="px-4 pb-4 pt-1 border-t border-card-border space-y-3">
               {/* Addresses */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -194,7 +194,7 @@ export default function TransactionCard({ transaction, compact = false }: Transa
               {tx.explanation && (
                 <div>
                   <p className="text-[10px] text-text-muted font-mono mb-1">AI EXPLANATION</p>
-                  <p className="text-xs text-text-secondary bg-bg/50 rounded-lg p-3 border border-border">
+                  <p className="text-xs text-text-secondary bg-bg/50 rounded-lg p-3 border border-card-border">
                     {tx.explanation}
                   </p>
                 </div>

@@ -309,7 +309,7 @@ export default function AttackSimPage() {
                         ? result.passed
                           ? 'border-accent-green/30 bg-accent-green/5'
                           : 'border-accent-red/30 bg-accent-red/5 pulse-red-bg'
-                        : 'border-border bg-bg-card'
+                        : 'border-card-border bg-bg-card'
                     } ${isPending ? 'opacity-40' : ''}`}
                   >
                     <div className="flex items-center gap-4 px-5 py-4">
@@ -466,7 +466,7 @@ export default function AttackSimPage() {
 
                   <button
                     onClick={reset}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-bg-card text-text-secondary border border-border hover:text-white hover:border-accent-green/30 transition-all mx-auto"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-bg-card text-text-secondary border border-card-border hover:text-white hover:border-accent-green/30 transition-all mx-auto"
                   >
                     <RotateCcw className="w-4 h-4" />
                     Run Again

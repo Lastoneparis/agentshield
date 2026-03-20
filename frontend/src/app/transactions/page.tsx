@@ -185,7 +185,7 @@ export default function TransactionsPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3 bg-bg-card border border-border rounded-xl p-4">
+          <div className="flex flex-wrap items-center gap-3 bg-bg-card border border-card-border rounded-xl p-4">
             <Filter className="w-4 h-4 text-text-muted" />
 
             {/* Search */}
@@ -196,7 +196,7 @@ export default function TransactionsPage() {
                 placeholder="Search address, agent, policy..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-bg border border-border rounded-lg pl-9 pr-3 py-2 text-xs font-mono text-white placeholder-text-muted outline-none focus:border-accent-blue transition-colors"
+                className="w-full bg-bg border border-card-border rounded-lg pl-9 pr-3 py-2 text-xs font-mono text-white placeholder-text-muted outline-none focus:border-accent-blue transition-colors"
               />
             </div>
 
@@ -204,7 +204,7 @@ export default function TransactionsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="bg-bg border border-border rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-accent-blue cursor-pointer"
+              className="bg-bg border border-card-border rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-accent-blue cursor-pointer"
             >
               <option value="all">All Status</option>
               <option value="approved">Approved</option>
@@ -216,7 +216,7 @@ export default function TransactionsPage() {
             <select
               value={riskFilter}
               onChange={(e) => setRiskFilter(e.target.value as RiskFilter)}
-              className="bg-bg border border-border rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-accent-blue cursor-pointer"
+              className="bg-bg border border-card-border rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-accent-blue cursor-pointer"
             >
               <option value="all">All Risk</option>
               <option value="low">Low (0-30)</option>
@@ -229,7 +229,7 @@ export default function TransactionsPage() {
             <select
               value={agentFilter}
               onChange={(e) => setAgentFilter(e.target.value)}
-              className="bg-bg border border-border rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-accent-blue cursor-pointer"
+              className="bg-bg border border-card-border rounded-lg px-3 py-2 text-xs font-mono text-white outline-none focus:border-accent-blue cursor-pointer"
             >
               <option value="all">All Agents</option>
               {agents.map((a) => (
@@ -254,7 +254,7 @@ export default function TransactionsPage() {
             </div>
 
             {filtered.length === 0 ? (
-              <div className="bg-bg-card border border-border rounded-xl p-12 text-center">
+              <div className="bg-bg-card border border-card-border rounded-xl p-12 text-center">
                 <ArrowLeftRight className="w-8 h-8 text-text-muted mx-auto mb-3 opacity-30" />
                 <p className="text-sm text-text-muted">No transactions match your filters</p>
               </div>

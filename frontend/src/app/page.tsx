@@ -151,8 +151,8 @@ function AgentActivityFeed() {
   }, []);
 
   return (
-    <div className="bg-bg-card border border-border rounded-xl overflow-hidden h-full">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="bg-bg-card border border-card-border rounded-xl overflow-hidden h-full">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-card-border">
         <div className="flex items-center gap-2">
           <Bot className="w-4 h-4 text-accent-blue" />
           <h3 className="text-sm font-medium text-white">Agent Activity</h3>
@@ -197,8 +197,8 @@ function AgentActivityFeed() {
 
 function TransactionMonitor({ transactions }: { transactions: Transaction[] }) {
   return (
-    <div className="bg-bg-card border border-border rounded-xl overflow-hidden h-full">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="bg-bg-card border border-card-border rounded-xl overflow-hidden h-full">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-card-border">
         <div className="flex items-center gap-2">
           <Activity className="w-4 h-4 text-accent-green" />
           <h3 className="text-sm font-medium text-white">Transaction Monitor</h3>
@@ -256,8 +256,8 @@ function PolicySidebar({ policies }: { policies: Policy[] }) {
   };
 
   return (
-    <div className="bg-bg-card border border-border rounded-xl overflow-hidden h-full">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="bg-bg-card border border-card-border rounded-xl overflow-hidden h-full">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-card-border">
         <div className="flex items-center gap-2">
           <Shield className="w-4 h-4 text-accent-green" />
           <h3 className="text-sm font-medium text-white">Security Policies</h3>
@@ -275,7 +275,7 @@ function PolicySidebar({ policies }: { policies: Policy[] }) {
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-bg hover:border-accent-green/20 transition-all"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg border border-card-border bg-bg hover:border-accent-green/20 transition-all"
             >
               <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${p.enabled ? 'text-accent-green' : 'text-text-muted'}`} />
               <div className="flex-1 min-w-0">
@@ -416,7 +416,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex items-center justify-center gap-3 mt-4">
-                <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-bg-card border border-border text-text-secondary hover:text-white hover:border-accent-blue/30 transition-all">
+                <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-bg-card border border-card-border text-text-secondary hover:text-white hover:border-accent-blue/30 transition-all">
                   <Wallet className="w-4 h-4" />
                   Connect Wallet
                 </button>

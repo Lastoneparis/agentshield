@@ -43,7 +43,7 @@ export default function SecurityAlert({ alert, onAcknowledge }: SecurityAlertPro
       className={`relative bg-bg-card border rounded-xl p-4 transition-all duration-200 ${
         alert.transaction.status === 'blocked'
           ? 'border-accent-red/20 glow-red blocked-stamp'
-          : 'border-border'
+          : 'border-card-border'
       }`}
     >
       {/* Header */}
@@ -85,7 +85,7 @@ export default function SecurityAlert({ alert, onAcknowledge }: SecurityAlertPro
       </div>
 
       {/* Explanation */}
-      <div className="bg-bg/50 border border-border rounded-lg p-2.5 mb-3">
+      <div className="bg-bg/50 border border-card-border rounded-lg p-2.5 mb-3">
         <p className="text-[10px] text-text-muted font-mono font-bold mb-1">AI ANALYSIS</p>
         <p className="text-xs text-text-secondary leading-relaxed">{alert.explanation}</p>
       </div>
@@ -94,7 +94,7 @@ export default function SecurityAlert({ alert, onAcknowledge }: SecurityAlertPro
       {!alert.acknowledged && onAcknowledge && (
         <button
           onClick={() => onAcknowledge(alert.id)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-bg-hover text-text-secondary hover:text-white border border-border hover:border-accent-green/30 transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-bg-hover text-text-secondary hover:text-white border border-card-border hover:border-accent-green/30 transition-all"
         >
           <CheckCircle className="w-3 h-3" />
           Acknowledge
