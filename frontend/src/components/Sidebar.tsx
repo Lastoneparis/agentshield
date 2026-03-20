@@ -5,18 +5,20 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   ArrowLeftRight,
-  ShieldAlert,
   Settings,
   Bot,
   Shield,
+  Zap,
+  Bell,
 } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/agents', label: 'Agent Control', icon: Bot, badge: 'DEMO' },
+  { href: '/attack-sim', label: 'Attack Simulation', icon: Zap, badge: 'NEW' },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-  { href: '/alerts', label: 'Alerts', icon: ShieldAlert },
+  { href: '/alerts', label: 'Alerts', icon: Bell },
   { href: '/policies', label: 'Policies', icon: Settings },
-  { href: '/agents', label: 'Agent Control', icon: Bot },
 ];
 
 export default function Sidebar() {
@@ -31,7 +33,7 @@ export default function Sidebar() {
         </div>
         <div>
           <h1 className="text-sm font-bold text-white tracking-wide">AgentShield</h1>
-          <p className="text-[10px] text-text-muted font-mono">SECURITY MIDDLEWARE</p>
+          <p className="text-[10px] text-text-muted font-mono">SECURITY RUNTIME</p>
         </div>
       </div>
 
@@ -52,9 +54,13 @@ export default function Sidebar() {
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
               <span className="font-medium">{item.label}</span>
-              {item.href === '/agents' && (
-                <span className="ml-auto text-[9px] bg-accent-blue/20 text-accent-blue px-1.5 py-0.5 rounded font-mono font-bold">
-                  DEMO
+              {item.badge && (
+                <span className={`ml-auto text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                  item.badge === 'NEW'
+                    ? 'bg-accent-amber/20 text-accent-amber'
+                    : 'bg-accent-blue/20 text-accent-blue'
+                }`}>
+                  {item.badge}
                 </span>
               )}
             </Link>
@@ -66,7 +72,13 @@ export default function Sidebar() {
       <div className="px-4 py-4 border-t border-border">
         <div className="text-[10px] text-text-muted font-mono">
           <p>ETHGlobal Cannes 2026</p>
-          <p className="text-accent-green mt-1">v1.0.0</p>
+          <div className="flex items-center gap-1.5 mt-1">
+            <div className="relative">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent-green" />
+              <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-accent-green pulse-ring" />
+            </div>
+            <span className="text-accent-green">v1.0.0 — ACTIVE</span>
+          </div>
         </div>
       </div>
     </aside>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 
@@ -9,6 +10,7 @@ interface StatsCardProps {
   icon: LucideIcon;
   trend?: string;
   color: 'green' | 'red' | 'blue' | 'amber';
+  suffix?: string;
 }
 
 const colorMap = {
@@ -28,7 +30,7 @@ const colorMap = {
     bg: 'bg-accent-blue/10',
     text: 'text-accent-blue',
     border: 'border-accent-blue/20',
-    glow: '',
+    glow: 'glow-blue',
   },
   amber: {
     bg: 'bg-accent-amber/10',
@@ -38,8 +40,41 @@ const colorMap = {
   },
 };
 
-export default function StatsCard({ title, value, icon: Icon, trend, color }: StatsCardProps) {
+function useCountUp(target: number, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const prevTarget = useRef(0);
+
+  useEffect(() => {
+    const start = prevTarget.current;
+    prevTarget.current = target;
+    const startTime = Date.now();
+
+    const tick = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(start + (target - start) * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  }, [target, duration]);
+
+  return count;
+}
+
+export default function StatsCard({ title, value, icon: Icon, trend, color, suffix }: StatsCardProps) {
   const c = colorMap[color];
+  const numericValue = typeof value === 'number' ? value : parseFloat(value);
+  const isNumeric = !isNaN(numericValue);
+  const animatedValue = useCountUp(isNumeric ? numericValue : 0);
+
+  const displayValue = isNumeric
+    ? typeof value === 'number' && Number.isInteger(value)
+      ? animatedValue
+      : animatedValue.toFixed(1)
+    : value;
 
   return (
     <motion.div
@@ -51,7 +86,9 @@ export default function StatsCard({ title, value, icon: Icon, trend, color }: St
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-medium text-text-muted uppercase tracking-wider">{title}</p>
-          <p className={`text-3xl font-bold font-mono mt-2 ${c.text}`}>{value}</p>
+          <p className={`text-3xl font-bold font-mono mt-2 ${c.text}`}>
+            {displayValue}{suffix || ''}
+          </p>
           {trend && (
             <p className="text-xs text-text-muted mt-1 font-mono">{trend}</p>
           )}

@@ -102,3 +102,16 @@ export async function sendDemoAction(action: string): Promise<InstructionResult>
     body: JSON.stringify({ action }),
   });
 }
+
+// Execute transaction (used by demo buttons)
+export async function executeTransaction(params: {
+  agent_id: string;
+  to: string;
+  value: string;
+  token: string;
+}): Promise<InstructionResult> {
+  return request<InstructionResult>('/agent/execute', {
+    method: 'POST',
+    body: JSON.stringify(params),
+  });
+}

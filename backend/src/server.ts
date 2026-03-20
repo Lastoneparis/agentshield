@@ -50,6 +50,11 @@ app.get('/', (_req, res) => {
       agents: 'GET /api/agents',
       agent_stats: 'GET /api/agents/:id/stats',
       dashboard: 'GET /api/dashboard/stats',
+      attack_sim_run: 'POST /api/attack-sim/run',
+      attack_sim_run_single: 'POST /api/attack-sim/run/:id',
+      attack_sim_scenarios: 'GET /api/attack-sim/scenarios',
+      attack_sim_reports: 'GET /api/attack-sim/reports',
+      attack_sim_report: 'GET /api/attack-sim/reports/:id',
       websocket: 'WS /ws',
     },
   });

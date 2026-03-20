@@ -24,6 +24,14 @@ import {
 import { evaluateTransaction } from '../policy-engine';
 import { simulateTransaction } from '../transaction-simulator';
 import { processTransaction, executeApprovedTransaction, TransactionRequest } from '../middleware/security';
+import {
+  getScenarios,
+  getScenarioById,
+  runAllAttacks,
+  runSingleAttack,
+  getReports,
+  getReportById,
+} from '../attack-simulation';
 
 const router = Router();
 
@@ -260,6 +268,78 @@ router.get('/dashboard/stats', (_req: Request, res: Response) => {
   try {
     const stats = getDashboardStats();
     return res.json(stats);
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Attack Simulation ──
+
+router.post('/attack-sim/run', async (req: Request, res: Response) => {
+  try {
+    const { agent_id } = req.body;
+    if (!agent_id) {
+      return res.status(400).json({ error: 'Missing required field: agent_id' });
+    }
+
+    const report = await runAllAttacks(agent_id);
+    return res.json(report);
+  } catch (err: any) {
+    console.error('[API] /attack-sim/run error:', err);
+    return res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
+router.post('/attack-sim/run/:id', async (req: Request, res: Response) => {
+  try {
+    const scenarioId = paramStr(req.params.id);
+    const { agent_id } = req.body;
+
+    if (!agent_id) {
+      return res.status(400).json({ error: 'Missing required field: agent_id' });
+    }
+
+    const scenario = getScenarioById(scenarioId);
+    if (!scenario) {
+      return res.status(404).json({ error: `Attack scenario '${scenarioId}' not found` });
+    }
+
+    const result = await runSingleAttack(scenario, agent_id);
+    return res.json(result);
+  } catch (err: any) {
+    console.error('[API] /attack-sim/run/:id error:', err);
+    return res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
+router.get('/attack-sim/scenarios', (_req: Request, res: Response) => {
+  try {
+    const scenarios = getScenarios();
+    return res.json({ scenarios, count: scenarios.length });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/attack-sim/reports', (req: Request, res: Response) => {
+  try {
+    const limit = queryInt(req.query.limit, 20);
+    const offset = queryInt(req.query.offset, 0);
+    const reports = getReports(limit, offset);
+    return res.json({ reports, count: reports.length });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/attack-sim/reports/:id', (req: Request, res: Response) => {
+  try {
+    const reportId = paramStr(req.params.id);
+    const report = getReportById(reportId);
+    if (!report) {
+      return res.status(404).json({ error: 'Report not found' });
+    }
+    return res.json(report);
   } catch (err: any) {
     return res.status(500).json({ error: err.message });
   }

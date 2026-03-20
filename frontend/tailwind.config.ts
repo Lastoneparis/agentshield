@@ -38,12 +38,17 @@ const config: Config = {
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "slide-in": "slideIn 0.3s ease-out",
+        "slide-in-right": "slideInRight 0.5s ease-out",
         glow: "glow 2s ease-in-out infinite alternate",
       },
       keyframes: {
         slideIn: {
           "0%": { transform: "translateY(-10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
         },
         glow: {
           "0%": { boxShadow: "0 0 5px rgba(0, 255, 136, 0.2)" },

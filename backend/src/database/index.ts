@@ -77,6 +77,18 @@ export function initDatabase(): void {
     CREATE INDEX IF NOT EXISTS idx_alerts_tx ON alerts(transaction_id);
     CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alerts(severity);
     CREATE INDEX IF NOT EXISTS idx_audit_agent ON audit_log(agent_id);
+
+    CREATE TABLE IF NOT EXISTS attack_reports (
+      id TEXT PRIMARY KEY,
+      agent_id TEXT NOT NULL,
+      security_score INTEGER NOT NULL,
+      total_attacks INTEGER NOT NULL,
+      attacks_blocked INTEGER NOT NULL,
+      report_json TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_attack_reports_agent ON attack_reports(agent_id);
   `);
 
   seedDefaultPolicies();
