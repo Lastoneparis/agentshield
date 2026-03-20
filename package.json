@@ -1,0 +1,20 @@
+{
+  "name": "agentshield",
+  "version": "1.0.0",
+  "description": "AI Agent Security Middleware for Web3 Wallets",
+  "private": true,
+  "scripts": {
+    "install:all": "cd contracts && npm install && cd ../backend && npm install && cd ../agents && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:agents": "cd agents && npx ts-node demo.ts",
+    "demo": "cd agents && npx ts-node demo.ts",
+    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "contracts:compile": "cd contracts && npx hardhat compile",
+    "contracts:test": "cd contracts && npx hardhat test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}

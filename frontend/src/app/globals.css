@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e2130 #0a0b0f;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #0a0b0f;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #1e2130;
+  border-radius: 3px;
+}
+
+body {
+  color: #ffffff;
+  background: #0a0b0f;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.glow-green {
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15), 0 0 30px rgba(0, 255, 136, 0.05);
+}
+
+.glow-red {
+  box-shadow: 0 0 15px rgba(255, 51, 102, 0.15), 0 0 30px rgba(255, 51, 102, 0.05);
+}
+
+.blocked-stamp {
+  position: relative;
+}
+
+.blocked-stamp::after {
+  content: 'BLOCKED';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(255, 51, 102, 0.15);
+  border: 4px solid rgba(255, 51, 102, 0.15);
+  padding: 4px 20px;
+  border-radius: 8px;
+  pointer-events: none;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.2em;
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+*.db
+*.db-journal
+.env
+.env.local
+.env.production
+!*.env.example
+*.log
+.DS_Store
+coverage/
+artifacts/
+cache/
+typechain-types/
